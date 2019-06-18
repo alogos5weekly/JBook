@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+<h1>Edit profile</h1>
+
+{% block content %}
+  <h3 class="center">Update Profile</h3>
+  <div class="container user-page-container">
+    <div class="card-panel z-depth-0">
+        <form method="post" enctype="multipart/form-data" id="profileEditForm">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% bootstrap_form form2 %}
+            <button type="submit" value="Update Profile" class="btn btn-large blue right waves-effect waves-light">Update Profile</button>
+        </form>
+    </div>
+  </div>
+{% endblock %}

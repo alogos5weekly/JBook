@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
@@ -37,9 +36,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap3',
+    #local apps
     'accounts',
+    'blog',
+
+    #Third party apps
+    #django-ckeditor video guide
+    #https://www.youtube.com/watch?v=L6y6cn1XUfw
+    'bootstrap3',
+    'ckeditor',
+    'ckeditor_uploader',
+    'sorl.thumbnail',
+    'crispy_forms',
 ]
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CKEDITOR_UPLOAD_PATH = "post_images/"
+THUMBNAIL_DEBUG = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,7 +68,7 @@ ROOT_URLCONF = 'JBook.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_DIR],
+        'DIRS': [TEMPLATE_DIR,],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -120,7 +132,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = 'home/gaurav/JBook/JBook/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 #  url to redirect after successfull login
 LOGIN_REDIRECT_URL = 'test'
 LOGOUT_REDIRECT_URL = 'thanks'
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

@@ -1,0 +1,36 @@
+{% extends 'blog/blog_base.html' %}
+{% load sorl_thumbnail %}
+{% block content %}
+
+<h1>{{ post.title|safe }}</h1>
+<h4>written by: {{post.author}}</h4>
+<br>
+<hr>
+<br>
+
+<div >
+    <a href="#">
+
+        {% if post.thumbnail %}
+        {% thumbnail post.thumbnail "200x270" crop="center" as im %}
+            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
+
+        {% endif %}
+    </a>
+</div>
+<br>
+<p>{{ post.content|safe }}</p>
+
+{% if post.published_at %}
+
+<a class='btn btn-primary' href="{% url 'blog:post_edit' slug=post.slug %}">Edit</a>
+
+{% else %}
+
+<a class='btn btn-primary' href="{% url 'blog:publish_post' slug=post.slug %}">Publish</a>
+
+
+{% endif %}
+
+{% endblock %}
