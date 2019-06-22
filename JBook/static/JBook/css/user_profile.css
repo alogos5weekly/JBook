@@ -185,3 +185,52 @@ a, button, code, div, img, input, label, li, p, pre, select, span, svg, table, t
     color: #abb6c4;
     margin-right: 5px;
 }
+
+.ArticleCopy{
+  font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+  width: 80%;
+  margin:0 auto;
+  border: 1px solid #ddd;
+  padding: 3rem;
+}
+.ArticleCopy p {
+    text-rendering: optimizeLegibility;
+}
+.ArticleCopy blockquote {
+    border-radius: 3px;
+    position: relative;  /*  <--- */
+    font-style: italic;
+    text-align: center;
+    padding: 1rem 1.2rem;
+    width: 80%;  /* create space for the quotes */
+    color: #4a4a4a;
+    margin: 1rem auto 2rem;
+    color: #4a4a4a;
+    background: #E8E8E8;
+}
+/* -- create the quotation marks -- */
+.ArticleCopy blockquote:before,
+.ArticleCopy blockquote:after{
+    font-family: FontAwesome;
+    position: absolute;
+    /* -- inside the relative position of blockquote -- */
+    top: 13px;
+    color: #E8E8E8;
+    font-size: 34px;
+}
+.ArticleCopy blockquote:before{
+    content: "\f10d";
+    margin-right: 13px;
+    right: 100%;
+}
+.ArticleCopy blockquote:after{
+    content: "\f10e";
+    margin-left: 13px;
+    left: 100%;
+}
+*, *:before, *:after{
+    margin: 0;
+    padding: 0;
+    direction: ltr;
+    box-sizing: border-box;
+}

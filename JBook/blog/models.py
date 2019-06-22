@@ -16,6 +16,9 @@ class PostView(models.Model):
     def __str__(self):
         return self.user.username
 
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey('Post', on_delete=models.CASCADE)
 
 class Category(models.Model):
     title = models.CharField(max_length=20)
@@ -27,7 +30,7 @@ class Category(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
-    content = RichTextUploadingField()
+    content = RichTextUploadingField(blank=False, null=True)
     post = models.ForeignKey(
         'Post', related_name='comments', on_delete=models.CASCADE)
 
@@ -44,7 +47,7 @@ class Post(models.Model):
     content = RichTextUploadingField(blank=False, null=True)
     # comment_count = models.IntegerField(default = 0)
     # view_count = models.IntegerField(default = 0)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     thumbnail = ImageField(blank=True, null=True)
     categories = models.ManyToManyField(Category)
     featured = models.BooleanField(blank=True, default=False)
@@ -59,8 +62,8 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
-        if self.thumbnail:
-            self.im = get_thumbnail(self.thumbnail, '50x100', crop='center', format='JPEG')
+        # if self.thumbnail:
+        #     self.im = get_thumbnail(self.thumbnail, format='JPEG')
         if not self.id:
             self.created_at = timezone.now()
         self.updated_at = timezone.now()
@@ -74,7 +77,7 @@ class Post(models.Model):
 
     @property
     def get_comments(self):
-        return self.comments.all().order_by('published_at')
+        return self.comments.all().order_by('timestamp')
 
     @property
     def comment_count(self):
@@ -83,3 +86,7 @@ class Post(models.Model):
     @property
     def view_count(self):
         return PostView.objects.filter(post=self).count()
+
+    @property
+    def like_count(self):
+        return Like.objects.filter(post=self).count()

@@ -4,8 +4,17 @@
 
 {% block content %}
 <div class="container">
-    <div class="row list-margins">
+    <div class="row">
+        {% if t == 0 %}
+        <h2 class="dark">Recent Posts</h2>
+        {% elif t == 1 %}
+        <h2 class="dark">{{post_user.username}}'s Posts </h2>
+        {% endif %}
+        <hr style="border-top: 5px solid grey" >
+
         {% for post in posts %}
+        {% if post.published_at %}
+
         <div class="col-sm-6 col-xs-6">
             <div class="list mb-2">
                 <div class="list-header">
@@ -23,15 +32,19 @@
                     </a>
                 </div>
                 <div class="list-content">
-                    <h2><a href="#" class="text-black">{{post.title}}</a></h2>
+                    {% if t == 1 and not post.published_at %}
+                    <div class="category mb-5">Draft</div>
+                    {% endif %}
+                    <h2><a href="{% url 'blog:post_detail' slug=post.slug %}" class="text-black">{{post.title}}</a></h2>
                     <span class="list-meta">
-                    	<span class="list-meta-item"><i class="fa fa-clock-o"></i> 2016</span>
-                    	<a href="#" class="list-meta-item"><i class="fa fa-star"></i> 9.33</a>
+                    	<span class="list-meta-item"><i class="fa fa-clock-o"></i> {{post.published_at|date:"D d M Y"}}</span>
+                    	<a href="#" class="list-meta-item"><i class="far fa-thumbs-up"></i>  {{post.like_count}}</a>
                     </span>
                     <p>{{post.overview|truncatewords:30|safe}}<p>
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
 </div>

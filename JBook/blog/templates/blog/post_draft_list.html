@@ -1,0 +1,44 @@
+{% extends 'blog/blog_base.html' %}
+{% load sorl_thumbnail %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <h2 class="dark">My Drafts</h2>
+        <hr style="border-top: 5px solid grey" >
+        {% for post in posts %}
+
+        <div class="col-sm-6 col-xs-6">
+            <div class="list mb-2">
+                <div class="list-header">
+                    <a href="{% url 'blog:post_detail' slug=post.slug %}" class="list-header-image">
+
+                        {% if post.thumbnail %}
+
+                        {% thumbnail post.thumbnail "200x270" crop="center" as im %}
+                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                        {% endthumbnail %}
+
+                        {% else %}
+                        <img src="/media/post_images/post_thumbnail_default.jpg" width="200" height="270">
+                        {% endif %}
+                    </a>
+                </div>
+                <div class="list-content">
+
+                    <div class="category mb-5">Draft</div>
+
+                    <h2><a href="{% url 'blog:post_detail' slug=post.slug %}" class="text-black">{{post.title}}</a></h2>
+                    <span class="list-meta">
+                    	<span class="list-meta-item"><i class="fa fa-clock-o"></i> {{post.created_at|date:"D d M Y"}}</span>
+                    	<a href="#" class="list-meta-item"><i class="far fa-thumbs-up"></i>  {{post.like_count}}</a>
+                    </span>
+                    <p>{{post.overview|truncatewords:30|safe}}<p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

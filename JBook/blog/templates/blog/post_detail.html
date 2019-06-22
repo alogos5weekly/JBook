@@ -2,35 +2,109 @@
 {% load sorl_thumbnail %}
 {% block content %}
 
-<h1>{{ post.title|safe }}</h1>
-<h4>written by: {{post.author}}</h4>
-<br>
-<hr>
-<br>
 
-<div >
-    <a href="#">
+    <div class="wrap mybody">
 
-        {% if post.thumbnail %}
-        {% thumbnail post.thumbnail "200x270" crop="center" as im %}
-            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-        {% endthumbnail %}
+    <section class="site-section py-lg">
+      <div class="container">
 
-        {% endif %}
-    </a>
-</div>
-<br>
-<p>{{ post.content|safe }}</p>
+        <div class="row blog-entries ">
 
-{% if post.published_at %}
+          <div class="col-md-12 col-lg-8 main-content">
+            {% if post.thumbnail %}
+                {% if post.thumbnail.width > 730 or post.thumbnail.height > 500 %}
+                {% thumbnail post.thumbnail "730x500" crop="center" as im %}
+                  <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }} class="img-fluid mb-5">
+                {% endthumbnail %}
+                {% else %}
+                  <img src="{{post.thumbnail.url}}" class="img-fluid mb-5">
+                {% endif %}
+            {% endif %}
 
-<a class='btn btn-primary' href="{% url 'blog:post_edit' slug=post.slug %}">Edit</a>
+             <br/>
+            <br/>
 
-{% else %}
+             <div class="post-meta">
+                        <span class="author mr-2">
+                            {% if post.author.profile.avatar %}
+                            <img src="{{post.author.profile.avatar.url}}"
+                            {% else %}
+                            <img src="/media/user_profile_images/user_profile_default.png"
+                            {% endif %}
+                            class="mr-2"> {{post.author.username}}</span>&bullet;
+                        <span class="mr-2">{{post.published_at|date:"D, d M, Y"}} </span> &bullet;
+                        <span class="ml-2"><span class="fa fa-comments"></span> {{post.comment_count}}</span>
+            </div>
+            <br/>
+            <h1 class="mb-4">{{post.title|safe}}</h1>
+            {% for cat in post.categories.all %}
+            <a class="category mb-5" href="#">{{cat}}</a>
+            {% endfor %}
 
-<a class='btn btn-primary' href="{% url 'blog:publish_post' slug=post.slug %}">Publish</a>
+            <div class="post-content-body">
+              <p>{{post.content|safe}}</p>
+            </div>
+            <hr size="30">
+            {% if request.user == post.author %}
+            <a class='btn btn-primary' href="{% url 'blog:post_edit' slug=post.slug %}">Edit</a>
+            {% else %}
+            {% if is_liked %}
+            <a class='btn btn-primary' ><span class="far fa-thumbs-up"></span>  {{post.like_count}} Liked</a>
+            {% else %}
+            <a class='btn btn-primary' href="{% url 'blog:post_like' slug=post.slug %}"><span class="far fa-thumbs-up"></span>  {{post.like_count}} Like</a>
+            {% endif %}
+            {% endif %}
+            {% if not post.published_at %}
+            <a class='btn btn-primary' href="{% url 'blog:publish_post' slug=post.slug %}">Publish</a>
+            {% endif %}
 
+            <hr>
+            <div class="pt-5">
+              <h3 class="mb-5">{{post.comment_count}} Comments</h3>
+              <ul class="comment-list">
+                {% for comment in post.get_comments %}
+                <li class="comment">
+                  <div class="vcard">
+                      {% if comment.user.profile.avatar.url %}
+                      <img src="{{comment.user.profile.avatar.url}}" alt="Image placeholder" class="rounded-circle">
+                      {% else %}
+                      <img src="media/user_profile_images/user_profile_default.png" alt="Image placeholder">
+                      {% endif %}
+                  </div>
+                  <div class="comment-body">
+                    <a href="{% url 'accounts:profile' username=comment.user.username %}"><h3>{{comment.user.username}}</h3></a>
+                    <div class="meta">{{comment.timestamp|date:"F j Y P"}}</div>
+                    <p>{{comment.content|safe}}</p>
+                    {% if request.user == comment.user %}
+                    <a class='btn-primary btn-sm' href="{% url 'blog:delete_comment' pk=comment.pk %}">Delete</a>
+                    {% endif %}
+                  </div>
+                </li>
+                {% endfor %}
 
-{% endif %}
+            {% if request.user.is_authenticated %}
+              <div class="comment-form-wrap pt-5">
+                <h3 class="mb-5">Leave a comment</h3>
+                <form method="POST" action="." class="p-5 bg-light">
+                  {% csrf_token %}
+                  <div class="row">
+                    <div class="form-group col-md-12">
+                      {{ form.as_p }}
+                    </div>
+                    <div class="form-group col-md-12">
+                      <button type="submit" class="btn btn-secondary">Submit Comment</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              {% endif %}
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+    </div>
 
 {% endblock %}
