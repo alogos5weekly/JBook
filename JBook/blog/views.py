@@ -10,6 +10,7 @@ from .models import Post, PostView, Comment, Like
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from django.http import HttpResponseRedirect
 
 User = get_user_model()
 
@@ -89,6 +90,9 @@ class PostDetailView(DetailView):
     context_object_name = 'post'
     form = CommentForm()
 
+    def get_queryset(self):
+        return super().get_queryset().filter(published_at__isnull=False)
+
     def get_object(self):
         obj = super().get_object()
         if self.request.user.is_authenticated:
@@ -140,11 +144,13 @@ class PostCreateView(LoginRequiredMixin  ,CreateView):
         return super().form_valid(form)
 
 
-
-class PostUpdateView(LoginRequiredMixin ,UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     template_name = 'blog/post_form.html'
     form_class = PostForm
+
+    def get_queryset(self):
+        return super().get_queryset().filter(author=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -157,24 +163,33 @@ class PostUpdateView(LoginRequiredMixin ,UpdateView):
         return super().form_valid(form)
 
 
-
-class PostDeleteView(LoginRequiredMixin ,DeleteView):
-    model = Post
-    success_url = reverse_lazy('post_list')
-    template_name = 'post_confirm_delete.html'
+@login_required
+def post_delete(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    if request.user == post.author:
+        post.delete()
+        return redirect('blog:post_list')
+    else:
+        return redirect('blog:post_detail', slug=slug)
 
 @login_required
 def post_publish(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    post.publish()
-    return redirect('blog:post_detail', slug=slug)
+    if request.user == post.author:
+        post.publish()
+        return redirect('blog:post_detail', slug=slug)
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
 
 @login_required
 def comment_remove(request, pk):
     comment = Comment.objects.get(pk=pk)
     post_slug = comment.post.slug
-    comment.delete()
+    if request.user == comment.user:
+        comment.delete()
     return redirect('blog:post_detail', slug=post_slug)
+
 
 @login_required
 def like(request, slug):
