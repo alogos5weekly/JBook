@@ -26,7 +26,7 @@ class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
     context_object_name = 'posts'  ###https://stackoverflow.com/questions/5959779/what-is-context-object-name-in-django-views
-    paginate_by = 5
+    paginate_by = 4
 
     def get_context_data(self, **kwargs):
         category_count = get_category_count()
