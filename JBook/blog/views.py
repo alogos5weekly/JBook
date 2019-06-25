@@ -21,7 +21,6 @@ def get_category_count():
         .annotate(Count('categories__title'))
     return queryset
 
-
 class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
@@ -90,8 +89,8 @@ class PostDetailView(DetailView):
     context_object_name = 'post'
     form = CommentForm()
 
-    def get_queryset(self):
-        return super().get_queryset().filter(published_at__isnull=False)
+    # def get_queryset(self):
+    #     return super().get_queryset().filter(published_at__isnull=False)
 
     def get_object(self):
         obj = super().get_object()
@@ -128,7 +127,7 @@ class PostDetailView(DetailView):
             return redirect('blog:post_detail', slug=post.slug)
 
 
-class PostCreateView(LoginRequiredMixin  ,CreateView):
+class PostCreateView(LoginRequiredMixin , CreateView):
     model = Post
     template_name = 'blog/post_form.html'
     form_class = PostForm
@@ -138,15 +137,31 @@ class PostCreateView(LoginRequiredMixin  ,CreateView):
         context['title'] = 'Create'
         return context
 
+    def get_success_url(self):
+        if 'draft' in self.request.POST:
+            return reverse('blog:draft_posts')
+        return super().get_success_url()
+
+
     def form_valid(self, form):
+        self.form = form
         form.instance.author = self.request.user
         form.save()
         return super().form_valid(form)
 
+    # def post(self, request, *args, **kwargs):
+    #     form = PostForm(request.POST)
+    #     if form.is_valid():
+    #         post = self.get_object()
+    #         form.instance.user = request.user
+    #         form.instance.post = post
+    #         form.save()
+    #         return redirect('blog:post_detail', slug=post.slug)
+    #
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
-    template_name = 'blog/post_form.html'
+    template_name = 'blog/edit_post.html'
     form_class = PostForm
 
     def get_queryset(self):

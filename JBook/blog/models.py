@@ -64,6 +64,9 @@ class Post(models.Model):
         self.slug = slugify(self.title)
         # if self.thumbnail:
         #     self.im = get_thumbnail(self.thumbnail, format='JPEG')
+        val = getattr(self, self.title, False)
+        if val:
+            setattr(self, self.title, val.capitalize())    
         if not self.id:
             self.created_at = timezone.now()
         self.updated_at = timezone.now()
