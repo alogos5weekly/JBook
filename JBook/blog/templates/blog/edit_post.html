@@ -9,6 +9,9 @@
     {% csrf_token %}
     {{ form|crispy }}
     <input class="btn btn-primary" type="submit" name="draft" value="Update" />
+    {% if not object.published_at %}
+    <input class="btn btn-secondary" type="submit" name="publish" value="Publish" />
+    {% endif %}
 </form>
 
 </div>

@@ -9,7 +9,6 @@ class PostForm(forms.ModelForm):
         fields = ('title', 'overview', 'content', 'thumbnail',
         'categories')
 
-
 class CommentForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea(attrs={
         'class': 'form-control',

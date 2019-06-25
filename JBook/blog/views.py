@@ -89,8 +89,8 @@ class PostDetailView(DetailView):
     context_object_name = 'post'
     form = CommentForm()
 
-    # def get_queryset(self):
-    #     return super().get_queryset().filter(published_at__isnull=False)
+    def get_queryset(self):
+        return super().get_queryset().filter(published_at__isnull=False)
 
     def get_object(self):
         obj = super().get_object()
@@ -138,9 +138,12 @@ class PostCreateView(LoginRequiredMixin , CreateView):
         return context
 
     def get_success_url(self):
+
+        slug = self.form.instance.slug
         if 'draft' in self.request.POST:
             return reverse('blog:draft_posts')
-        return super().get_success_url()
+        else:
+            return reverse('blog:publish_post', kwargs={'slug':slug})
 
 
     def form_valid(self, form):
@@ -148,16 +151,6 @@ class PostCreateView(LoginRequiredMixin , CreateView):
         form.instance.author = self.request.user
         form.save()
         return super().form_valid(form)
-
-    # def post(self, request, *args, **kwargs):
-    #     form = PostForm(request.POST)
-    #     if form.is_valid():
-    #         post = self.get_object()
-    #         form.instance.user = request.user
-    #         form.instance.post = post
-    #         form.save()
-    #         return redirect('blog:post_detail', slug=post.slug)
-    #
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
@@ -170,9 +163,23 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Update'
+        print(context)
         return context
 
+    def get_success_url(self):
+        slug = self.form.instance.slug
+        if 'publish' in self.request.POST:
+            return reverse('blog:publish_post', kwargs={'slug':slug})
+        is_p = False
+        if self.form.instance.published_at:
+            is_p = True
+        if is_p:
+            return reverse('blog:post_detail', kwargs={'slug': slug})
+        else:
+            return reverse('blog:draft_posts')
+
     def form_valid(self, form):
+        self.form = form
         form.instance.author = self.request.user
         form.save()
         return super().form_valid(form)
@@ -190,11 +197,8 @@ def post_delete(request, slug):
 @login_required
 def post_publish(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    if request.user == post.author:
-        post.publish()
-        return redirect('blog:post_detail', slug=slug)
-    else:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    post.publish()
+    return redirect('blog:post_detail', slug=slug)
 
 
 @login_required

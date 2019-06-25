@@ -8,8 +8,8 @@
 <form  method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form|crispy }}
-    <input class="btn btn-primary" type="submit" name="draft" value="Draft" />
-    <input class="btn btn-secondary" type="submit" name="publish" value="Publish" />
+    <input class="btn btn-primary" type="submit" name="publish" value="Publish" />
+    <input class="btn btn-secondary" type="submit" name="draft" value="Draft" />    
 </form>
 
 </div>
