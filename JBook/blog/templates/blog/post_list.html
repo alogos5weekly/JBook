@@ -32,9 +32,7 @@
                     </a>
                 </div>
                 <div class="list-content">
-                    {% if t == 1 and not post.published_at %}
-                    <div class="category mb-5">Draft</div>
-                    {% endif %}
+                    
                     <h2><a href="{% url 'blog:post_detail' slug=post.slug %}" class="text-black">{{post.title}}</a></h2>
                     <span class="list-meta">
                     	<span class="list-meta-item"><i class="fa fa-clock-o"></i> {{post.published_at|date:"D d M Y"}}</span>

@@ -25,13 +25,15 @@
             <br/>
 
              <div class="post-meta">
-                        <span class="author mr-2">
+                        <a href="{% url 'accounts:profile' username=post.author.username %}" >
+                            <span class="author mr-2">
                             {% if post.author.profile.avatar %}
                             <img src="{{post.author.profile.avatar.url}}"
                             {% else %}
                             <img src="/media/user_profile_images/user_profile_default.png"
                             {% endif %}
                             class="mr-2"> {{post.author.username}}</span>&bullet;
+                        </a>
                         <span class="mr-2">{{post.published_at|date:"D, d M, Y"}} </span> &bullet;
                         <span class="ml-2"><span class="fa fa-comments"></span> {{post.comment_count}}</span>
             </div>

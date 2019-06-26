@@ -25,7 +25,7 @@ class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
     context_object_name = 'posts'  ###https://stackoverflow.com/questions/5959779/what-is-context-object-name-in-django-views
-    paginate_by = 4
+    paginate_by = 6
 
     def get_context_data(self, **kwargs):
         category_count = get_category_count()
@@ -45,6 +45,7 @@ class UserPosts(LoginRequiredMixin ,ListView):
     redirect_field_name = 'blog/post_list.html'
     model = Post
     context_object_name = 'posts'
+    paginate_by = 6
 
     def get_context_data(self, **kwargs):
         print(13)
@@ -70,6 +71,7 @@ class DraftListView(LoginRequiredMixin, ListView):
     redirect_field_name = 'blog/post_list.html'
     model = Post
     context_object_name = 'posts'
+    paginate_by = 6
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -81,7 +83,7 @@ class DraftListView(LoginRequiredMixin, ListView):
         except:
             raise Http404
         else:
-            return self.post_user.posts.filter(published_at__isnull=True).order_by('created_at')
+            return self.post_user.posts.filter(published_at__isnull=True).order_by('-created_at')
 
 class PostDetailView(DetailView):
     model = Post
@@ -124,7 +126,7 @@ class PostDetailView(DetailView):
             form.instance.user = request.user
             form.instance.post = post
             form.save()
-            return redirect('blog:post_detail', slug=post.slug)
+            return redirect(reverse('blog:post_detail', kwargs={'slug':post.slug}))
 
 
 class PostCreateView(LoginRequiredMixin , CreateView):
@@ -190,7 +192,10 @@ def post_delete(request, slug):
     post = get_object_or_404(Post, slug=slug)
     if request.user == post.author:
         post.delete()
-        return redirect('blog:post_list')
+        if post.published_at:
+            return redirect('blog:post_list')
+        else:
+            return redirect('blog:draft_posts')
     else:
         return redirect('blog:post_detail', slug=slug)
 
