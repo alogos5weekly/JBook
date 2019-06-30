@@ -49,8 +49,9 @@ class Post(models.Model):
     # view_count = models.IntegerField(default = 0)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     thumbnail = ImageField(blank=True, null=True)
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, related_name='posts')
     featured = models.BooleanField(blank=True, default=False)
+    is_anonymous = models.BooleanField(blank=True, default=False)
     slug = models.SlugField(max_length = 250, null = True, blank = True, unique = True)
 
     def __str__(self):
@@ -66,7 +67,7 @@ class Post(models.Model):
         #     self.im = get_thumbnail(self.thumbnail, format='JPEG')
         val = getattr(self, self.title, False)
         if val:
-            setattr(self, self.title, val.capitalize())    
+            setattr(self, self.title, val.capitalize())
         if not self.id:
             self.created_at = timezone.now()
         self.updated_at = timezone.now()

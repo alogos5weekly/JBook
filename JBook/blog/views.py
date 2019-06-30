@@ -38,7 +38,21 @@ class PostListView(ListView):
         return context
 
     def get_queryset(self):
-        return Post.objects.filter(published_at__lte=timezone.now()).order_by('-published_at')
+        category = self.request.GET.get('category')
+        if category:
+            print(category)
+            return Post.objects.filter(published_at__lte=timezone.now(), posts__in = category.title).order_by('-published_at')
+        else:
+            return Post.objects.filter(published_at__lte=timezone.now()).order_by('-published_at')
+#
+# class CategoryPostList(ListView):
+#     model = Post
+#     template_name = 'blog/post_list.html'
+#     context_object_name = 'posts'  ###https://stackoverflow.com/questions/5959779/what-is-context-object-name-in-django-views
+#     paginate_by = 6
+#
+#     def get_queryset(self):
+
 
 class UserPosts(LoginRequiredMixin ,ListView):
     login_url = '/login/'
@@ -48,7 +62,6 @@ class UserPosts(LoginRequiredMixin ,ListView):
     paginate_by = 6
 
     def get_context_data(self, **kwargs):
-        print(13)
         context = super().get_context_data(**kwargs)
         context['post_user'] = self.post_user
         context['t'] = 1
@@ -56,13 +69,16 @@ class UserPosts(LoginRequiredMixin ,ListView):
 
     ### prefetch_related:  https://kite.com/python/docs/django.db.models.query.QuerySet.prefetch_related
     def get_queryset(self):
-        print(12)
+
         try:
             self.post_user = User.objects.prefetch_related('posts').get(username__iexact=self.kwargs.get('username'))#https://docs.djangoproject.com/en/dev/ref/models/querysets/#get
         except User.DoesNotExist:
             raise Http404
         else:
-            return self.post_user.posts.all()
+            if self.post_user == self.request.user:
+                return self.post_user.posts.all().order_by('-published_at')
+            else:
+                return self.post_user.posts.all().filter(is_anonymous=False).order_by('-published_at')
 
 
 class DraftListView(LoginRequiredMixin, ListView):
