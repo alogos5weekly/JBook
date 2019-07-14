@@ -38,6 +38,14 @@
                     	<span class="list-meta-item"><i class="fa fa-clock-o"></i> {{post.published_at|date:"D d M Y"}}</span>
                     	<a href="#" class="list-meta-item"><i class="far fa-thumbs-up"></i>  {{post.like_count}}</a>
                         <span class="list-meta-item"><i class="fa fa-eye"></i> {{post.view_count}}</span>
+
+                    </span>
+                    <span class="list-meta">
+                        {% if not post.is_anonymous %}
+                        <a style="color:blue" href="{% url 'accounts:profile' username=post.author.username %}" class="list-meta-item"><i class="fas fa-user"></i>  By {{post.author.username}}</a>
+                        {% else %}
+                        <span style="color:red" class="list-meta-item"><i class="fas fa-user-shield"></i>  Written as anonymously</span>
+                        {% endif %}
                     </span>
                     <p>{{post.overview|truncatewords:30|safe}}<p>
                 </div>

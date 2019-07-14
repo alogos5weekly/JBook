@@ -21,7 +21,7 @@ class Like(models.Model):
     post = models.ForeignKey('Post', on_delete=models.CASCADE)
 
 class Category(models.Model):
-    title = models.CharField(max_length=20)
+    title = models.CharField(max_length=2)
     description = RichTextUploadingField(blank=True, null=True)
     def __str__(self):
         return self.title
