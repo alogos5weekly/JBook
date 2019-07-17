@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.HomePage.as_view(), name='home'),
     path('blog/', include('blog.urls', namespace='blog')),
+   path('qanda/', include('qanda.urls', namespace='qanda')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('accounts/', include('django.contrib.auth.urls')),

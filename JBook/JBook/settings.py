@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     #local apps
     'accounts',
     'blog',
+    'qanda',
+    'studymaterial',
 
     #Third party apps
     #django-ckeditor video guide
@@ -139,4 +141,4 @@ LOGIN_REDIRECT_URL = 'test'
 LOGOUT_REDIRECT_URL = 'thanks'
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'   
+MEDIA_URL = '/media/'
