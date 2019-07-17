@@ -23,7 +23,5 @@ urlpatterns = [
     path('',index1, name = 'index_qanda'),
     path('question/<int:qid>/<slug:qslug>/',view_question ,name = 'view_question'),
     path('ask_ques/',ask_ques, name = "ask_ques"),
-    path('ajax-answer-question/',ajaxanswerquestion,name =  "ajaxanswerquestion"),
-
 
 ]

@@ -1,12 +1,5 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-    <head>
-        <meta charset="utf-8">
-        <title>{{ question.question_title }} - My Q&A</title>
-        <link rel="stylesheet" href="{% static 'style.css' %}">
-    </head>
-    <body>
+{% extends 'base.html' %}
+{% block content %}
         <div class="content">
             <h1>{{ Question.question_title }}</h1>
             <p>{{ Question.question_text|safe }}</p>
@@ -23,15 +16,10 @@
                 <input type="text" id="posted_by" name="posted_by" value="" autocomplete="off" placeholder="Enter your name ..."><p />
                 <input type="hidden" id="qid" name="qid" value="{{ question.qid }}">
                 <button name="answer_question" id="answer_question">Answer Question</button>
+                <p id="demo"></p>
             <!-- </form> -->
             {% if error %}
                 <p class="error">{{ error }}</p>
             {% endif %}
         </div>
-        <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/core.js' %}"></script>
-        <script type="text/javascript">
-            var csrftoken = getCookie("csrftoken");
-        </script>
-    </body>
-</html>
+    {% endblock %}
