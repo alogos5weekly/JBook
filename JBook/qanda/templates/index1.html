@@ -1,12 +1,5 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-    <head>
-        <meta charset="utf-8">
-        <title>My Q&A</title>
-        <link rel="stylesheet" href="{% static 'style.css' %}">
-    </head>
-    <body>
+{% extends 'base.html' %}
+{% block content %}
 <h1>Q & A site!</h1>
 <div class="content">
 {% for question in Question %}
@@ -16,5 +9,4 @@
     </div>
 {% endfor %}
 </div>
-</body>
-</html>
+{% endblock %}

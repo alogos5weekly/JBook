@@ -18,6 +18,7 @@ from django.urls import path,include
 from . import views, settings
 from django.contrib.staticfiles.urls import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from qanda.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +31,9 @@ urlpatterns = [
     path('test/', views.TestPage.as_view(), name='test'),
     path('thanks/', views.ThanksPage.as_view(), name='thanks'),
     path('tinymce/', include('tinymce.urls')),
+    path('ajax-answer-question',ajaxanswerquestion),
+
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()
