@@ -25,11 +25,13 @@ def ask_ques(request):
         # print(question)
         # print(posted_by)
         q = Question(question_title=title, question_text=question, posted_by=posted_by)
+        print("Aaaaaaaaa############")
         q.save()
         return redirect('qanda:view_question', qid = q.qid, qslug = q.slug)
         #except Exception as e:
         #    return render(request, 'ask_ques.html', { 'error': 'Something is wrong with the form!' })
     else:
+        print("###################1223")
         return render(request, 'ask_ques.html', {})
 
 def view_question(request, qid, qslug):
