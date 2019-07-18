@@ -31,7 +31,7 @@ urlpatterns = [
     path('test/', views.TestPage.as_view(), name='test'),
     path('thanks/', views.ThanksPage.as_view(), name='thanks'),
     path('tinymce/', include('tinymce.urls')),
-    path('ajax-answer-question',ajaxanswerquestion),
+    path('ajax-answer-question',ajaxanswerquestion, name = 'ajaxanswerquestion'),
 
 
 ]

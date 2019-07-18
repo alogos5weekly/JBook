@@ -59,7 +59,6 @@ def ajaxanswerquestion(request):
             qid = json_data['qid']
             a = Answer(answer_text=answer, posted_by=posted_by, qid=Question.objects.get(qid=qid))
             a.save()
-            print("hurray!!!!!!!!!!!!!!!")
             return JsonResponse({'Success': 'Answer posted successfully.'})
         except Exception as e:
             print(e)

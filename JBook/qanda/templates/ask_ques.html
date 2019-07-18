@@ -9,7 +9,7 @@
             {% csrf_token %}
             <input type="text" name="title" value="" autocomplete="off" placeholder="What's your question's title?"><p />
             <textarea name="question" rows="8" cols="80" placeholder="What's your question?"></textarea><p />
-            <input type="text" n,name =  "ajaxanswerquestion"ame="posted_by" value="" autocomplete="off" placeholder="Enter your name ..."><p />
+            <input type="text" name="posted_by" value="" autocomplete="off" placeholder="Enter your name ..."><p />
             <input type="submit" name="ask" value="Ask Question">
         </form>
         {% if error %}
