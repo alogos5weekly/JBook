@@ -61,7 +61,16 @@
             <li><a href="{% url 'blog:post_list' %}">All Posts</a></li>
           </ul>
         </li>
-                      <li><a href="#" class="btn btn-simple">Create Group</a></li>
+
+            <li class="dropdown">
+    <a href="{% url 'blog:post_list' %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+    QandA <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+    <li><a href="{% url 'qanda:index_qanda' %}">Questions</a></li>
+    <li><a href="{% url 'qanda:ask_ques' %}">Ask Question</a></li>
+    </ul>
+</li>
+
                       <li> <a href="{% url 'accounts:user_profile' %}">My Profile</a></li>
                       <li><a href="{% url 'accounts:logout' %}" class="btn btn-simple">Log out</a></li>
     						{% else %}
