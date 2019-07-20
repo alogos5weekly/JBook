@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from qanda.models import *
 from django.core import serializers
+
 import json
 import markdown2
 import bleach
