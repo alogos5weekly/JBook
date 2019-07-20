@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 # Create your models here.
+User = get_user_model()
 class Question(models.Model):
     qid = models.AutoField(primary_key=True)
     question_title = models.CharField(max_length=100)
