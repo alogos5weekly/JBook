@@ -1,5 +1,3 @@
-
-
 // using jQuery
 function getCookie(name) {
   var cookieValue = null;

@@ -1,39 +1,35 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from qanda.models import *
 from django.core import serializers
-
 import json
+from django.contrib.auth.decorators import login_required
 import markdown2
 import bleach
 
-def index1(request):
+
+def index(request):
     context = {}
-    context['Question'] = Question.objects.all()
-    return render(request, 'index1.html', context)
+    context['questions'] = Question.objects.all()
+    return render(request, 'qanda_index.html', context)
 
-def ask_ques(request):
+@login_required
+def askquestion(request):
     if request.method == 'POST':
-        #try:
-        title = request.POST.get('title')
-        question = request.POST.get('question')
-        posted_by = request.POST.get('posted_by')
-        # print(title)
-        # print(question)
-        # print(posted_by)
-        q = Question(question_title=title, question_text=question, posted_by=posted_by)
-        q.save()
-        return redirect('qanda:view_question', qid = q.qid, qslug = q.slug)
-        #except Exception as e:
-        #    return render(request, 'ask_ques.html', { 'error': 'Something is wrong with the form!' })
+        try:
+            title = request.POST.get('title')
+            question = request.POST.get('question')
+            posted_by = request.POST.get('posted_by')
+            q = Question(question_title=title, question_text=question, posted_by=posted_by)
+            q.save()
+            return redirect(reverse('qanda:view-question',kwargs={'qid':q.qid , 'qslug':q.slug} ))
+        except Exception as e:
+            return render(request, 'ask_question.html', { 'error': 'Something is wrong with the form!' })
     else:
-        return render(request, 'ask_ques.html', {})
+        return render(request, 'ask_question.html', {})
 
-def view_question(request, qid, qslug):
+def viewquestion(request, qid, qslug):
     context = {}
     question = Question.objects.get(qid=qid, slug=qslug)
 
@@ -43,13 +39,14 @@ def view_question(request, qid, qslug):
     question_json['qid'] = question.qid
     question_json['question_text'] = bleach.clean(markdown2.markdown(question_json['question_text']), tags=['p', 'pre','code', 'sup', 'strong', 'hr', 'sub', 'a'])
     context['question'] = question_json
-    context['Answers'] = []
+    context['answers'] = []
     answers = Answer.objects.filter(qid=qid)
     for answer in answers:
         answer.answer_text = bleach.clean(markdown2.markdown(answer.answer_text), tags=['p', 'pre','code', 'sup', 'strong', 'hr', 'sub', 'a'])
-        context['Answers'].append(answer)
+        context['answers'].append(answer)
     return render(request, 'view_question.html', context)
 
+@login_required
 @csrf_exempt
 def ajaxanswerquestion(request):
     if request.method == 'POST':
@@ -64,4 +61,3 @@ def ajaxanswerquestion(request):
         except Exception as e:
             print(e)
             return JsonResponse({'Error': 'Something went wrong when posting your answer.'})
-            return render(request, 'ask_ques.html', { 'error': 'Something is wrong with the form!' })
