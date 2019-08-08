@@ -40,7 +40,6 @@ class PostListView(ListView):
     def get_queryset(self):
         category = self.request.GET.get('category')
         if category:
-            print(category+"##############********")
             return Post.objects.filter(published_at__lte=timezone.now(), categories__title = category).order_by('-published_at')
         else:
             return Post.objects.filter(published_at__lte=timezone.now()).order_by('-published_at')
