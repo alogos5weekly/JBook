@@ -9,7 +9,7 @@ class Question(models.Model):
     question_title = models.CharField(max_length=100)
     question_text = models.TextField(max_length=50000)
     date_posted = models.DateTimeField(auto_now_add=True)
-    posted_by = models.ForeignKey(User, on_delete=models)
+    posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
     slug = models.SlugField(max_length=40)
 
     def save(self, *args, **kwargs):
@@ -21,4 +21,4 @@ class Answer(models.Model):
     qid = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer_text = models.TextField(max_length=50000)
     date_posted = models.DateTimeField(auto_now_add=True)
-    posted_by = models.ForeignKey(User, on_delete=models)
+    posted_by = models.ForeignKey(User, on_delete=models.CASCADE)

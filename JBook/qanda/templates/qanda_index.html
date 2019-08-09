@@ -3,7 +3,7 @@
 <div class="content">
 {% for question in questions %}
     <div class="question">
-        <a href="{% url 'qanda:view-question' qid=question.id qslug=question.slug %}"><h1>{{ question.question_title }}</h1></a>
+        <a href="{% url 'qanda:view-question' qid=question.qid qslug=question.slug %}"><h1>{{ question.question_title }}</h1></a>
         <p>{{ question.question_text|truncatechars:300|slice:"-4" }}...</p>
     </div>
 {% endfor %}

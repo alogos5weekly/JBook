@@ -18,11 +18,11 @@ class Document(models.Model):
         ('others', 'others')
     )
     name = models.CharField(max_length = 200)
-    document = models.FileField(upload_to='docs/')
+    document = models.FileField(upload_to='docs/', null=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
     description = RichTextUploadingField(blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    category = models.CharField(max_length=3, choices=CATEGORY)
+    category = models.CharField(max_length=3, choices=CATEGORY, null=True)
     thumbnail = ImageField(blank=True, null=True)
     slug = models.SlugField(max_length = 250, null = True, blank = True, unique = True)
 

@@ -30,16 +30,17 @@ $.ajaxSetup({
 
 $('#answer_question').click(function(e) {
     e.preventDefault();
+    var url = $("#Url").attr("data-url");
+    console.log("he")
     $.post(
-        "/ajax-answer-question",
+        url,
         JSON.stringify({
         answer: $("#answer").val(),
-        posted_by: $("#posted_by").val(),
         qid: $("#qid").val(),
         }),
         function(data, success) {
         	if (data["Success"]) {
-                var answer = '<p class="answer">' + $("#answer").val() + '</p><p class="answerdetails"><span style="float: left"></span><span style="float: right">Posted by <strong>' + $("#posted_by").val() + '</strong></span></p>';
+                var answer = '<p class="answer">' + $("#answer").val() + '</p><p class="answerdetails"><span style="float: left"></span><span style="float: right">Posted by <strong>' + $("#tempname").val() + '</strong></span></p>';
                 $('#answers').append(answer)
 
             } else {
