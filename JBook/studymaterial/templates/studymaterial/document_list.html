@@ -1,0 +1,111 @@
+{% extends 'blog/blog_base.html' %}
+{% load pass_user %}
+
+{% block content %}
+<div class="container">
+
+    <div class="s003">
+          <form>
+            <div class="inner-form">
+              <div class="input-field first-wrap">
+                <div class="input-select">
+                  <select data-trigger="" name="category">
+                    <option placeholder="">Category</option>
+                    {% for cat, name in categories %}
+                    <option>{{cat}}</option>
+                    {% endfor %}
+
+                  </select>
+                </div>
+              </div>
+              <div class="input-field second-wrap">
+                <input id="search" type="text" placeholder="Enter Keywords?" />
+              </div>
+              <div class="input-field third-wrap">
+                <button class="btn-search" type="submit">
+                  <svg class="svg-inline--fa fa-search fa-w-16" aria-hidden="true" data-prefix="fas" data-icon="search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+
+    <div class="row">
+
+        {% for document in documents %}
+        <div class="col-sm-6 col-xs-6">
+            <div class="list mb-2">
+                <div class="list-header">
+                    <a href="{{document.document.url}}" download>
+                    <div class="content">
+
+                          <div class="box">
+                            <svg id="svg-canvas" class="svg-canvas" viewBox="0 0 150 150">
+                            </svg>
+                            <div class="trigger">
+                              <div>
+                                <div class="download-icon">
+                                  <div class="fa fa-download"></div>
+                                </div>
+                                <div class="text">DOWNLOAD</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        </a>
+                </div>
+                <div class="list-content">
+
+                    <h2><a href="{{document.document.url}}" class="text-black" target="_blank">{{document.name}}</a></h2>
+                    <span class="list-meta">
+                    	<span class="list-meta-item"><i class="fa fa-clock-o"></i> {{document.uploaded_at|date:"D d M Y"}}</span>
+                        {% pass_user document request.user as liked_flag %}
+                        {% if liked_flag  %}
+                    	<a style="color:red" href="{% url 'studymaterial:unlike' slug=document.slug %}" class="list-meta-item"><i class="far fa-thumbs-up" aria-hidden="true"></i> {{document.get_useful_count}} found useful</a>
+                        {% else %}
+                        <a  href="{% url 'studymaterial:useful' slug=document.slug %}" class="list-meta-item"><i class="far fa-thumbs-up" ></i> {{document.get_useful_count}} found useful</a>
+                        {% endif %}
+                        <span class="list-meta-item"><i class="fa fa-download"></i> count</span>
+
+                    </span>
+                    <span class="list-meta">
+                        <a style="color:blue" href="{% url 'accounts:profile' username=document.uploaded_by.username %}" class="list-meta-item"><i class="fas fa-user"></i>  By {{document.uploaded_by.username}}</a>
+                        <a href="{% url 'studymaterial:document_list' %}?category={{ document.category }}" class="list-meta-item text-black">In {{document.category}}</a>
+                    </span>
+                    <p>{{document.description|truncatewords:30|safe}}<p>
+                </div>
+            </div>
+        </div>
+
+        {% empty %}
+
+        <div class="alert alert-warning" role="alert">Sorry, There are No Documents!</div>
+
+        {% endfor %}
+    </div>
+</div>
+{% if is_paginated %}
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+      {% if page_obj.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+{% endblock %}

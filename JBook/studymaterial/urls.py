@@ -7,5 +7,8 @@ from . import views
 app_name = 'studymaterial'
 
 urlpatterns = [
-    path('', views.PostListView.as_view(), name='document_detail'),
+    path('', views.DocumentList.as_view(), name='document_list'),
+    path('upload/', views.upload_document, name='upload_doc'),
+    path('useful/<slug:slug>/', views.found_useful, name='useful'),
+    path('unlike/<slug:slug>/', views.unlike, name='unlike'),  
 ]

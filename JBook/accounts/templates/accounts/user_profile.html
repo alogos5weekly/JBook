@@ -17,8 +17,13 @@
     			<!-- END SIDEBAR USERPIC -->
     			<!-- SIDEBAR USER TITLE -->
     			<div class="profile-usertitle">
+
     				<div class="profile-usertitle-name">
-    					{{ profile.user.first_name }} {{ profile.user.last_name }}
+                        {% if profile.user.is_superuser %}
+                            Admin
+                        {% else %}
+    					   {{ profile.user.first_name }} {{ profile.user.last_name }}
+                        {% endif %}
     				</div>
     				<div class="profile-usertitle-job grey-text">
                         @{{ profile.user.username }}
@@ -50,12 +55,22 @@
     					<li>
     						<a href="{% url 'blog:user_posts' username=profile.user.username %}">
     						<i class="glyphicon glyphicon-user"></i>
-    						{{ profile.user.first_name }}'s Posts </a>
+                            {% if profile.user.is_superuser %}
+                                {{profile.user.username}}'s Posts
+                            {% else %}
+    						    {{ profile.user.first_name }}'s Posts
+                            {% endif %} </a>
     					</li>
     					<li>
     						<a href="#" target="_blank">
     						<i class="glyphicon glyphicon-upload"></i>
-    						{{ profile.user.first_name }}'s Uploads </a>
+                            {% if profile.user.is_superuser %}
+                                {{profile.user.username}}'s Uploads
+                            {% else %}
+    						    {{ profile.user.first_name }}'s Uploads
+                            {% endif %}
+                             </a>
+
     					</li>
     				</ul>
     			</div>

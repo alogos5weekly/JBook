@@ -29,6 +29,8 @@
         <link rel="stylesheet" href="{% static 'JBook/css/post_list.css'%}">
         <link rel="stylesheet" href="{% static 'JBook/css/newcss/animate.css'%}">
         <link rel="stylesheet" href="{% static 'JBook/css/post_detail.css'%}">
+        <link rel="stylesheet" href="{% static 'JBook/css/document_list.css'%}">
+        <link rel="stylesheet" href="{% static 'JBook/css/search.css'%}">
         <link rel="stylesheet" href="{% static  'JBook/css/newcss/owl.carousel.min.css'%}">
 
         <link rel="stylesheet" href="{% static 'JBook/fonts/ionicons/css/ionicons.min.css'%}">
@@ -117,5 +119,14 @@
   <script src="{% static "JBook/js/main.js" %}"></script>
   <script src="{% static "JBook/js/custom.js" %}"></script>
   <script src="{% static "JBook/js/core.js" %}"></script>
+  <script src="{% static "JBook/js/choices.js" %}"></script>
+  <script>
+  const choices = new Choices('[data-trigger]',
+  {
+    searchEnabled: false,
+    itemSelectText: '',
+  });
+
+  </script>
 
 </html>

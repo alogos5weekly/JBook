@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="col-4 offset-4 mb-5 mt-5">
+<h3>Upload The Document with Following Details</h3>
+{{form.media}}
+<form  method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input class="btn btn-primary" type="submit" name="Upload" value="upload" />
+</form>
+
+</div>
+
+
+{% endblock %}
