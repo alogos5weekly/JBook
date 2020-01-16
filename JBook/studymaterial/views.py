@@ -7,7 +7,7 @@ from .forms import DocumentForm
 from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
-
+from django.db.models import Q
 # Create your views here.
 User = get_user_model
 
@@ -19,8 +19,17 @@ class DocumentList(ListView):
 
     def get_queryset(self):
         category = self.request.GET.get('category')
-        if category:
+        q        = self.request.GET.get('q')
+
+        if category == None:
+            category = 'ALL'
+
+        if category != 'ALL' and q:
+            return Document.objects.filter( Q(name__icontains=q) | Q(uploaded_by__username__icontains=q) | Q(description__icontains=q), uploaded_at__lte=timezone.now(), category = category).order_by('-uploaded_at')
+        elif category != 'ALL':
             return Document.objects.filter(uploaded_at__lte=timezone.now(), category = category).order_by('-uploaded_at')
+        elif q:
+            return Document.objects.filter( Q(name__icontains=q) | Q(uploaded_by__username__icontains=q) | Q(description__icontains=q), uploaded_at__lte=timezone.now()).order_by('-uploaded_at')
         else:
             return Document.objects.filter(uploaded_at__lte=timezone.now()).order_by('-uploaded_at')
 

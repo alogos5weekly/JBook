@@ -5,12 +5,12 @@
 <div class="container">
 
     <div class="s003">
-          <form>
+          <form method="get">
             <div class="inner-form">
               <div class="input-field first-wrap">
                 <div class="input-select">
                   <select data-trigger="" name="category">
-                    <option placeholder="">Category</option>
+                    <option placeholder="">ALL</option>
                     {% for cat, name in categories %}
                     <option>{{cat}}</option>
                     {% endfor %}
@@ -19,7 +19,7 @@
                 </div>
               </div>
               <div class="input-field second-wrap">
-                <input id="search" type="text" placeholder="Enter Keywords?" />
+                <input name="q" id="search" type="text" placeholder="Enter Keywords?" />
               </div>
               <div class="input-field third-wrap">
                 <button class="btn-search" type="submit">
